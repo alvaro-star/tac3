@@ -1,5 +1,5 @@
 import pygame as pg
-from .constants import DISPLAY_WIDTH, DISPLAY_HEIGHT, TITLE
+from ..config.constants import DISPLAY_WIDTH, DISPLAY_HEIGHT, TITLE
 
 class Display():
     def create_display(self):
