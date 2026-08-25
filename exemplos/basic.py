@@ -10,7 +10,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill("white")
+    screen.fill("gray")
 
     #desenhe algo
 
