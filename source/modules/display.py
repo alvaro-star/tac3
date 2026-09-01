@@ -14,7 +14,7 @@ class Display():
         pygame.display.set_caption(TITLE)         
         #flags = 0       
         flags = pygame.SCALED | pygame.FULLSCREEN         
-        self.screen = pygame.display.set_mode(self.size, flags, display=0)
+        self.screen = pygame.display.set_mode(self.size, flags, display=0, vsync=1)
                     
         
     def reload(self):
@@ -23,7 +23,7 @@ class Display():
     def game_tick(self):
         # Captura o tempo decorrido desde o último quadro em segundos (Delta Time)
         # Limita o FPS máximo para não estressar o processador desnecessariamente
-        delta_time = self.clock.tick(FPS) / 1000.0 
+        delta_time = self.clock.tick_busy_loop(FPS) / 1000.0 
         return delta_time
 
 

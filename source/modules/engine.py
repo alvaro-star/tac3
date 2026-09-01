@@ -6,9 +6,13 @@ from .events.io import io_events
 from .events.actions import game_events
 from .ui.level1 import level1
 
+import gc
+
 class GameEngine:
     """A Engine Pura: Controla o ciclo de vida, janelas, eventos e loops."""
     def __init__(self):
+        # Pre-initialize mixer with a 512 or 1024 buffer to minimize CPU timing interruptions
+        pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
         pygame.init() # load all modules
         #pygame.display.init()
         #pygame.font.init()
@@ -26,6 +30,7 @@ class GameEngine:
     def run(self):
         # main menu - editor or game
          
+        gc.disable()
         game.start()
         """O Game Loop Principal"""
         try:

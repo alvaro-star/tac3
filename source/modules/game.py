@@ -1,5 +1,6 @@
 import pygame
 import sys
+import gc
 from .entities.player import Player
 
 
@@ -19,7 +20,7 @@ class Game():
 
     def stop(self):
         self.running = False
-
+        gc.enable()
         pygame.quit()
         sys.exit()
 
