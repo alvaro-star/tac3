@@ -11,7 +11,7 @@ class Panel():
 
         # Initialize a font (system default or custom font file)
         #self.font = pygame.font.SysFont("Arial", 14)
-        self.font = pygame.font.Font("assets/fonts/Call of Ops Duty II.otf", 50)
+        self.font = pygame.font.Font("assets/fonts/Call of Ops Duty II.otf", 30)
         
         
     def draw_fps(self):        

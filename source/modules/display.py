@@ -8,8 +8,10 @@ class Display():
     def create_display(self):        
         self.clock = pygame.time.Clock()  
         self.size = (WIDTH, HEIGHT)
-        #self.info = pygame.display.Info()
-        #self.size = (self.info.current_w, self.info.current_h)
+        self.info = pygame.display.Info()
+        self.real_size = (self.info.current_w, self.info.current_h)
+
+        # define scale
        
         pygame.display.set_caption(TITLE)         
         #flags = 0       
@@ -23,8 +25,7 @@ class Display():
     def game_tick(self):
         # Captura o tempo decorrido desde o último quadro em segundos (Delta Time)
         # Limita o FPS máximo para não estressar o processador desnecessariamente
-        delta_time = self.clock.tick_busy_loop(FPS) / 1000.0 
-        return delta_time
+        self.delta_time = self.clock.tick_busy_loop(FPS) / 1000.0         
 
 
 display = Display()

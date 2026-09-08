@@ -1,22 +1,29 @@
 import pygame
-from ..constants import HEIGHT, PLAYER_COLOR
+from ..constants import HEIGHT, LAYER_PLAYER, GRAVITY, SIZE_PLAYER
+from ..constants import MAP_H, MAP_W, FILE_PLAYER_1, TILE_SIZE
+from ..utils import utils
 
 
-class Player(pygame.sprite.Sprite):
+class Player(pygame.sprite.DirtySprite):
     """Classe que gerencia o personagem, suas físicas básicas e inputs."""
     def __init__(self, x, y):
         super().__init__()
         # Cria um quadrado temporário enquanto não há sprites carregados
-        self.image = pygame.Surface((40, 60))
-        self.image.fill(PLAYER_COLOR)
+        #self.image = pygame.Surface((40, 60))
+        #self.image.fill(pygame.Color("#5A1A1A"))
+        self.image = utils.load_image(FILE_PLAYER_1)
+        self.image = pygame.transform.smoothscale(self.image, SIZE_PLAYER)
         self.rect = self.image.get_frect(topleft=(x, y))
         
         # Vetores de movimento e física
         self.direction = pygame.math.Vector2(0, 0)
         self.speed = 300  # Pixels por segundo (multiplicado pelo delta time)
-        self.gravity = 1200
-        self.jump_speed = -500
+        self.gravity = GRAVITY
+        self.jump_speed = -600
         self.is_grounded = False
+
+        self.dirty = 1 # Draw once initially
+        self._layer = LAYER_PLAYER
 
     def get_input(self):
         keys = pygame.key.get_pressed()
@@ -39,14 +46,17 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.direction.y * dt
 
     def update(self, dt):
+        self.dirty = 1
+
         self.get_input()
         
         # Atualiza posição horizontal baseada no tempo delta (dt)
         self.rect.x += self.direction.x * self.speed * dt
         self.apply_gravity(dt)
         
-        # Simulação temporária de colisão com o "chão" da tela
-        if self.rect.bottom >= HEIGHT - 50:
-            self.rect.bottom = HEIGHT - 50
+        # Simulação temporária de colisão com o "chão" da tela        
+        floor = (int(MAP_H*0.9)*TILE_SIZE) + TILE_SIZE        
+        if self.rect.bottom >= floor:
+            self.rect.bottom = floor
             self.direction.y = 0
             self.is_grounded = True

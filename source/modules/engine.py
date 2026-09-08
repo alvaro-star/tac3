@@ -13,11 +13,11 @@ class GameEngine:
     def __init__(self):
         # Pre-initialize mixer with a 512 or 1024 buffer to minimize CPU timing interruptions
         pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
-        pygame.init() # load all modules
-        #pygame.display.init()
-        #pygame.font.init()
+        #pygame.init() # load all modules
+        pygame.display.init()
+        pygame.font.init()
         #pygame.joystick.init()
-        #pygame.mixer.init()
+        pygame.mixer.init()
         #...
 
         display.create_display()
@@ -35,10 +35,10 @@ class GameEngine:
         """O Game Loop Principal"""
         try:
             while game.running:
-                dt = display.game_tick()
+                display.game_tick()
                 
                 self.handle_events()
-                self.update(dt)
+                self.update(display.delta_time)
                 self.draw()
         except Exception as e:
             print(e)
@@ -59,13 +59,17 @@ class GameEngine:
 
     def draw(self):
         """Loop de Renderização: Onde desenhamos na tela"""        
-        level1.scenario() # background, tiles
+        #level1.scenario() # background, tiles
         panel.draw()
+         
         
         # Desenha todas as entidades registradas no grupo de sprites
-        game.all_sprites.draw(display.screen)        
+        # Render Phase - DirtyRect updating saves CPU/GPU time by partial clearing
+        rects = game.all_sprites.draw(display.screen)  
+        pygame.display.update(rects)
+
         # Atualiza o buffer da tela para o monitor do jogador
-        pygame.display.flip()
+        #pygame.display.flip()
 
 
 engine = GameEngine() # singleton 
