@@ -1,11 +1,34 @@
 import pygame
 from ..utils import utils
-from ..constants import LAYER_OBJECTS, TILE_SIZE, TILE_CROP, FILE_MAP_1
+from ..constants import TILE_SIZE, TILE_CROP, FILE_MAP_1
 
 
-class Floor(pygame.sprite.DirtySprite):
+class Tile():
+    def __init__(self,
+                 id:int, 
+                 surf:pygame.Surface,
+                 desc:str,
+                 w=TILE_SIZE,
+                 h=TILE_SIZE):
+        
+        self.id = id
+        self.image = surf
+        self.desc = desc
+        
+        if w != TILE_CROP or h != TILE_CROP:
+            self.image = pygame.transform.smoothscale(self.image, (w,h))
+        self.rect = self.image.get_rect()
+
+        # Converte e guarda o ID da GPU
+        self.texture_id = utils.surface_to_texture(self.image)
+       
+    def draw(self):
+            x,y,w,h = self.rect.x, self.rect.y, self.rect.w, self.rect.h        
+            utils.draw_textured_quad(self.texture_id, x,y,w,h)
+
+'''class Floor():
     def __init__(self, w=TILE_SIZE, h=TILE_SIZE, type=1):
-        super().__init__()
+        #super().__init__()
         if type == 1 : self.image = tiles.floor1
         elif type == 2 : self.image = tiles.floor2
         else: raise "Invalid type of Floor"
@@ -14,13 +37,20 @@ class Floor(pygame.sprite.DirtySprite):
             self.image = pygame.transform.smoothscale(self.image, (w,h))
         self.rect = self.image.get_rect()
 
-        self.dirty = 1 # Draw once initially
-        self._layer = LAYER_OBJECTS
+        # Converte e guarda o ID da GPU
+        self.texture_id = utils.surface_to_texture(self.image)
+
+        #self.dirty = 1 # Draw once initially
+        #self._layer = LAYER_OBJECTS
+
+    def draw(self):
+            x,y,w,h = self.rect.x, self.rect.y, self.rect.w, self.rect.h        
+            utils.draw_textured_quad(self.texture_id, x,y,w,h)
 
 
-class Brick(pygame.sprite.DirtySprite):
+class Brick():
     def __init__(self, w=TILE_SIZE, h=TILE_SIZE, type=1):
-        super().__init__()
+        #super().__init__()
         if type == 1 : self.image = tiles.brick1
         elif type == 2 : self.image = tiles.brick2
         else: raise "Invalid type of Brick"
@@ -29,11 +59,18 @@ class Brick(pygame.sprite.DirtySprite):
             self.image = pygame.transform.smoothscale(self.image, (w,h))
         self.rect = self.image.get_rect()
 
-        self.dirty = 1 # Draw once initially
-        self._layer = LAYER_OBJECTS
+        # Converte e guarda o ID da GPU
+        self.texture_id = utils.surface_to_texture(self.image)
 
+        #self.dirty = 1 # Draw once initially
+        #self._layer = LAYER_OBJECTS
 
-class Tiles():
+    def draw(self):
+            x,y,w,h = self.rect.x, self.rect.y, self.rect.w, self.rect.h        
+            utils.draw_textured_quad(self.texture_id, x,y,w,h)
+'''
+
+class TileMap():
     def load_sprite_maps(self):
         self.map_items = utils.load_image(FILE_MAP_1)
 
@@ -49,12 +86,17 @@ class Tiles():
         #pygame.image.save(self.brick2,"4.png")
 
         # object codes
-        self.codes = [
-            (None, None),   # code by index - 0 draw nothing
-            (Floor, 1),     # Class, type
-            (Floor, 2),     # code 2
-            (Brick, 1),     # code 3
-            (Brick, 2),     # code 4
+        '''(None, None),   # code by index - 0 draw nothing
+                    (Floor, 1),     # Class, type
+                    (Floor, 2),     # code 2
+                    (Brick, 1),     # code 3
+                    (Brick, 2),     # code 4'''
+        self.codes = [            
+            (0, None, "Empty"),   # code by index - 0 draw nothing
+            (1, self.floor1, "floor1"),     # id, surface, description
+            (2, self.floor2, "floor2"),
+            (3, self.brick1, "brick1"),
+            (4, self.brick2, "brick2")
         ]
 
-tiles = Tiles()
+#tile_map = TileMap()

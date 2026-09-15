@@ -4,7 +4,7 @@ from ..constants import MAP_H, MAP_W, TILE_SIZE, FILE_LV1, FILE_LV1_JSON
 from ..utils import utils
 import numpy as np
 import scipy.sparse as sp
-from ..entities.tiles import tiles
+from ..entities.tiles import Tile #tile_map
 
 
 class Level1():
@@ -68,11 +68,12 @@ class Level1():
         #np.savetxt('matrix.csv', dense_matrix, delimiter=',')
 
 
-    def load(self):        
+    def load(self, tile_map):        
         # debug
         self.create_first_map()
 
-        self.tiles:list[list[pygame.sprite.DirtySprite]] = []
+        #self.tiles:list[list[pygame.sprite.DirtySprite]] = []
+        self.tiles:list[list[Tile]] = []
         try:
             resource = utils.get_full_path(FILE_LV1_JSON)            
             with open(resource, 'r', encoding='utf-8') as file:
@@ -84,15 +85,7 @@ class Level1():
                 line = []           
                 for col in range(MAP_W):                    
                     if dense_matrix[lin,col] != 0:
-                        for k, call in enumerate(tiles.codes):
-                            if dense_matrix[lin,col] == k:
-                                tile = call[0]
-                                type = call[1]
-                                # place tile
-                                obj:pygame.sprite.DirtySprite = tile(type=type)
-                                x, y = col, lin # 2d position
-                                obj.rect.topleft = (x*TILE_SIZE, y*TILE_SIZE)
-                                line.append(obj)
+                        self.obj_call(dense_matrix, lin, col, line, tile_map)
                     else: line.append(None)  
                 self.tiles.append(line)  
 
@@ -105,4 +98,17 @@ class Level1():
             print("Error: The file is not a valid JSON format.")
         return True
 
-level1 = Level1()
+
+    def obj_call(self, dense_matrix, lin, col, line, tile_map):
+        for k, call in enumerate(tile_map.codes):
+            if dense_matrix[lin,col] == k:
+                id = call[0]
+                surf = call[1]
+                desc = call[2]
+                obj:Tile = Tile(id, surf, desc)
+                x, y = col, lin # 2d position
+                obj.rect.topleft = (x*TILE_SIZE, y*TILE_SIZE)
+                line.append(obj)
+
+
+#level1 = Level1()
