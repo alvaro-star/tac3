@@ -11,9 +11,7 @@ class Display():
 
     def create_display(self):        
         self.clock = pygame.time.Clock()  
-        info = pygame.display.Info()    # vetorial dirty sprites
-        #WIDTH, HEIGHT = (info.current_w, info.current_h)
-        #self.size = (WIDTH, HEIGHT)
+        info = pygame.display.Info()    # vetorial dirty sprites        
         self.size = (info.current_w, info.current_h)
                
         pygame.display.set_caption(TITLE)         
@@ -23,8 +21,7 @@ class Display():
         flags = FULLSCREEN | DOUBLEBUF | OPENGL      
         # ligar vsync no final com fps limitado ex. 60
         self.screen = pygame.display.set_mode(self.size, flags, display=0, vsync=0)
-        #self.off_screen = pygame.Surface(self.size)
-
+       
         # Setup 2D orthogonal projection
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()

@@ -1,10 +1,10 @@
-import pygame
+#import pygame
 import json
 from ..constants import MAP_H, MAP_W, TILE_SIZE, FILE_LV1, FILE_LV1_JSON
 from ..utils import utils
 import numpy as np
 import scipy.sparse as sp
-from ..entities.tiles import Tile #tile_map
+from ..entities.tiles import Tile, TileMap2 #tile_map
 
 
 class Level1():
@@ -99,7 +99,7 @@ class Level1():
         return True
 
 
-    def obj_call(self, dense_matrix, lin, col, line, tile_map):
+    def obj_call(self, dense_matrix, lin, col, line, tile_map:TileMap2):
         for k, call in enumerate(tile_map.codes):
             if dense_matrix[lin,col] == k:
                 id = call[0]

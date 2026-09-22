@@ -26,51 +26,8 @@ class Tile():
             x,y,w,h = self.rect.x, self.rect.y, self.rect.w, self.rect.h        
             utils.draw_textured_quad(self.texture_id, x,y,w,h)
 
-'''class Floor():
-    def __init__(self, w=TILE_SIZE, h=TILE_SIZE, type=1):
-        #super().__init__()
-        if type == 1 : self.image = tiles.floor1
-        elif type == 2 : self.image = tiles.floor2
-        else: raise "Invalid type of Floor"
-        
-        if w != TILE_CROP or h != TILE_CROP:
-            self.image = pygame.transform.smoothscale(self.image, (w,h))
-        self.rect = self.image.get_rect()
 
-        # Converte e guarda o ID da GPU
-        self.texture_id = utils.surface_to_texture(self.image)
-
-        #self.dirty = 1 # Draw once initially
-        #self._layer = LAYER_OBJECTS
-
-    def draw(self):
-            x,y,w,h = self.rect.x, self.rect.y, self.rect.w, self.rect.h        
-            utils.draw_textured_quad(self.texture_id, x,y,w,h)
-
-
-class Brick():
-    def __init__(self, w=TILE_SIZE, h=TILE_SIZE, type=1):
-        #super().__init__()
-        if type == 1 : self.image = tiles.brick1
-        elif type == 2 : self.image = tiles.brick2
-        else: raise "Invalid type of Brick"
-        
-        if w != TILE_CROP or h != TILE_CROP:
-            self.image = pygame.transform.smoothscale(self.image, (w,h))
-        self.rect = self.image.get_rect()
-
-        # Converte e guarda o ID da GPU
-        self.texture_id = utils.surface_to_texture(self.image)
-
-        #self.dirty = 1 # Draw once initially
-        #self._layer = LAYER_OBJECTS
-
-    def draw(self):
-            x,y,w,h = self.rect.x, self.rect.y, self.rect.w, self.rect.h        
-            utils.draw_textured_quad(self.texture_id, x,y,w,h)
-'''
-
-class TileMap():
+class TileMap2():
     def load_sprite_maps(self):
         self.map_items = utils.load_image(FILE_MAP_1)
 
@@ -81,18 +38,10 @@ class TileMap():
         self.brick2 = self.map_items.subsurface((832,400,TILE_CROP,TILE_CROP))
 
         #pygame.image.save(self.floor1,"1.png")
-        #pygame.image.save(self.floor2,"2.png")
-        #pygame.image.save(self.brick1,"3.png")
-        #pygame.image.save(self.brick2,"4.png")
-
+      
         # object codes
-        '''(None, None),   # code by index - 0 draw nothing
-                    (Floor, 1),     # Class, type
-                    (Floor, 2),     # code 2
-                    (Brick, 1),     # code 3
-                    (Brick, 2),     # code 4'''
         self.codes = [            
-            (0, None, "Empty"),   # code by index - 0 draw nothing
+            None,   # code by index - 0 draw nothing
             (1, self.floor1, "floor1"),     # id, surface, description
             (2, self.floor2, "floor2"),
             (3, self.brick1, "brick1"),

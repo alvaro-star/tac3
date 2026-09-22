@@ -25,6 +25,14 @@ class Utils():
         return pygame.image.load(os.path.join(self.path, file)).convert_alpha()
 
 
+    def cut_sprite(self, map:pygame.Surface, x,y,w,h, to_size:tuple[int,int],
+                   frame_list:list[pygame.Surface], texture_list:list[any]):
+        img = map.subsurface((x,y,w,h))
+        img = pygame.transform.smoothscale(img, to_size)            
+        frame_list.append(img)
+        texture_list.append(self.surface_to_texture(img))
+
+
     def surface_to_texture(self, pygame_surface:pygame.Surface):
         """
         Converte um Pygame Surface em uma textura OpenGL e retorna o ID da textura.

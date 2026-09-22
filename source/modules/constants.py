@@ -25,7 +25,7 @@ COLOR_TEXT = pygame.Color("#087204")
 COLOR_BG = pygame.Color("#5C94FC")
 
 GRAVITY = 1200
-SIZE_PLAYER = (40//SCALE, 80//SCALE)
+SIZE_PLAYER = (60//SCALE, 100//SCALE)
 
 # Layer constants for performance rendering
 '''LAYER_BACKGROUND = 0
@@ -43,4 +43,5 @@ FILE_LV1 = "source/data/lv1.npz"
 FILE_LV1_JSON = 'source/data/level1.json'
 FILE_MAP_1 = "assets/image/bg-1-1.png"
 FILE_PLAYER_1 = "assets/image/player.png"
+FILE_SPRITES_PLAYER = "assets/image/sprites3.png"
 
