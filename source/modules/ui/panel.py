@@ -4,7 +4,8 @@ from ..constants import SCALE
 from ..utils import utils
 
 class Panel():
-    def __init__(self):                
+    def __init__(self):  
+        pygame.font.init()              
         self.delay:int = 1
         self.counter = self.delay       
         fps_text = f"FPS:{str(int(display.clock.get_fps()))}"   
@@ -36,7 +37,7 @@ class Panel():
             self.rect = self.image.get_rect()    
             self.texture_id = utils.surface_to_texture(self.image)    
             self.counter = 0
-            self.dirty = 1
+            #self.dirty = 1
 
 
     def draw(self):

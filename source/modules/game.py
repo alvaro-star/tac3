@@ -6,6 +6,7 @@ from .ui.background import Background
 from .entities.tiles import TileMap2
 from .ui.level1 import Level1
 from .ui.panel import Panel
+from .config.sounds import sounds
 
 
 class Game():
@@ -29,7 +30,8 @@ class Game():
               
 
     def start(self):
-        self.running = True   
+        self.running = True 
+        sounds.play_music()
 
 
     def stop(self):

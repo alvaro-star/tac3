@@ -4,9 +4,9 @@ from ..utils import utils
 from ..entities.tiles import Tile
 
 class Background():
-    def __init__(self):
+    def __init__(self, color=COLOR_BG):
         self.image = pygame.Surface((WIDTH, HEIGHT))
-        self.image.fill(COLOR_BG) 
+        self.image.fill(color) 
         
         self.rect = self.image.get_rect()
 

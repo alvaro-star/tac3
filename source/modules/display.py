@@ -7,9 +7,9 @@ from OpenGL.GLU import *
 
 class Display():
     def __init__(self):
-        pass
+        pygame.display.init()
 
-    def create_display(self):        
+    def create_display(self):                
         self.clock = pygame.time.Clock()  
         info = pygame.display.Info()    # vetorial dirty sprites        
         self.size = (info.current_w, info.current_h)

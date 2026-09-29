@@ -4,19 +4,16 @@ from .game import game
 from .events.io import io_events
 from .events.actions import game_events
 from OpenGL.GL import *
+from .config.sounds import sounds
 
 class GameEngine:
     """A Engine Pura: Controla o ciclo de vida, janelas, eventos e loops."""
     def __init__(self):
-        # Pre-initialize mixer with a 512 or 1024 buffer to minimize CPU timing interruptions
-        pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
-        #pygame.init() # load all modules
-        pygame.display.init()
-        pygame.font.init()
-        #pygame.joystick.init()
-        pygame.mixer.init()
+        #pygame.init() # load all modules       
+        #pygame.joystick.init()        
         
-        display.create_display()        
+        display.create_display()   
+        sounds.load_assets()
         game.init_assets()
         #menu.create()        
         #options.create()        
