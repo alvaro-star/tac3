@@ -1,13 +1,13 @@
 {
-    "height": 34,
-    "width": 60,
+    "height": 100,
+    "width": 500,
     "tilewidth": 32,
     "tileheight": 32,
     "layers": [
         {
             "map": "source/data/lv1.npz",
-            "height": 34,
-            "width": 60,
+            "height": 100,
+            "width": 500,
             "name": "Blocks",
             "opacity": 1,
             "visible": true,

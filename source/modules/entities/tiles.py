@@ -27,7 +27,7 @@ class Tile():
             utils.draw_textured_quad(self.texture_id, x,y,w,h)
 
 
-class TileMap2():
+class TileMap():
     def load_sprite_maps(self):
         self.map_items = utils.load_image(FILE_MAP_1)
 

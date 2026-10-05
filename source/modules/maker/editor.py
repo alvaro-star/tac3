@@ -1,12 +1,13 @@
 import pygame
 import sys, os
 from ..display import display
-from .panel import Panel
+from .info import Info
 from .grid import Grid
-from ..entities.tiles import TileMap2
+from ..entities.tiles import TileMap
 from OpenGL.GL import *
 from ..ui.background import Background
-from ..ui.level1 import Level1
+from ..ui.levels import Level1
+from ..constants import TILE_MAP_LEVEL1
 
 
 class Editor:
@@ -14,14 +15,17 @@ class Editor:
             self.running = True 
             display.create_display()
             self.bg = Background("Black")
-            self.panel = Panel()
+            
             self.grid = Grid()
+            self.info = Info(self.grid)
             # load tiles
-            self.tile_map = TileMap2()        
+            self.tile_map = TileMap()        
             self.tile_map.load_sprite_maps()
             self.level1 = Level1()
             if not self.level1.load(self.tile_map):
                 self.level1.load(self.tile_map)
+
+            self.grid.load_level(self.level1)
     
             #self.bg.add_cenario(self.level1.tiles)
             
@@ -42,12 +46,27 @@ class Editor:
     def handle_events(self):
         """Loop de Eventos: Inputs globais do sistema e interrupções"""
         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:
+                self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     self.running = False
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.running = False
         #game_events()
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            if self.grid.anchor[0] > 0:
+                self.grid.anchor[0] -= 1
+        if keys[pygame.K_RIGHT]:
+            max = TILE_MAP_LEVEL1[0] - self.grid.x_tiles
+            if self.grid.anchor[0] < max:
+                self.grid.anchor[0] += 1
+        if keys[pygame.K_UP]:
+            if self.grid.anchor[1] > 0:
+                self.grid.anchor[1] -= 1
+        if keys[pygame.K_DOWN]:
+            max = TILE_MAP_LEVEL1[1] - self.grid.y_tiles
+            if self.grid.anchor[1] < max:
+                self.grid.anchor[1] += 1
         pass
 
     def update(self, dt):
@@ -55,7 +74,8 @@ class Editor:
         # new thread!                
         # check_collisions()
         #game.player.update(dt)
-        self.panel.update(dt)
+        self.info.update(dt, self.grid)
+        self.grid.update(dt)
             
     def draw(self):
         """Loop de Renderização: Onde desenhamos na tela"""                 
@@ -63,7 +83,7 @@ class Editor:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         # ordem importa - cada layer por vez - pode organizar
         self.bg.draw()
-        self.panel.draw()
+        self.info.draw()
         self.grid.draw()
         
         pygame.display.flip()

@@ -1,25 +1,33 @@
 #import pygame
 import json
-from ..constants import MAP_H, MAP_W, TILE_SIZE, FILE_LV1, FILE_LV1_JSON
+from ..constants import TILE_MAP_LEVEL1, TILE_SIZE, FILE_LV1, FILE_LV1_JSON
 from ..utils import utils
 import numpy as np
 import scipy.sparse as sp
-from ..entities.tiles import Tile, TileMap2 #tile_map
+from ..entities.tiles import Tile, TileMap #tile_map
 
 
-class Level1():
+class Level():
+    def __init__(self):
+        pass
+
+
+class Level1(Level):
+    def __init__(self):
+        super().__init__()
+
     def create_first_map(self):
         try:
             map1 = {            
-                "height": MAP_H,
-                "width": MAP_W,
+                "height": TILE_MAP_LEVEL1[1],
+                "width": TILE_MAP_LEVEL1[0],
                 "tilewidth": TILE_SIZE,
                 "tileheight": TILE_SIZE,  
                 "layers": [
                     {                        
                         "map": FILE_LV1,
-                        "height": MAP_H,
-                        "width": MAP_W,
+                        "height": TILE_MAP_LEVEL1[1],
+                        "width": TILE_MAP_LEVEL1[0],
                         "name": "Blocks",
                         "opacity": 1,            
                         "visible": True,
@@ -47,20 +55,23 @@ class Level1():
     def create_matrix_tile(self):
         # 1. Create a matrix with mostly zeros
         # (Using sparse array syntax - standard in SciPy)
-        dense_matrix = np.zeros((MAP_H, MAP_W), dtype=int)
+        dense_matrix = np.zeros((TILE_MAP_LEVEL1[1], TILE_MAP_LEVEL1[0]), dtype=int)
+        
                 
         # add tiles - floor          
-        for lin in range(MAP_H):
-            for col in range(MAP_W):               
+        for lin in range(TILE_MAP_LEVEL1[1]):
+            for col in range(TILE_MAP_LEVEL1[0]):               
                 # some few bricks and floor
-                block_cond_1 = int(MAP_W*0.5) <= col <= int(MAP_W*0.6)
-                block_cond_2 = lin == int(MAP_H*0.7)
+                block_cond_1 = int(TILE_MAP_LEVEL1[0]*0.5) <= col <= int(TILE_MAP_LEVEL1[0]*0.6)
+                block_cond_2 = lin == int(TILE_MAP_LEVEL1[1]*0.7)
                 
-                if lin > int(MAP_H*0.9):
+                if lin > int(TILE_MAP_LEVEL1[1]*0.9):
                     dense_matrix[lin,col] = 1                                             
                 elif block_cond_1 and block_cond_2:                        
                     dense_matrix[lin,col] = 3 
-                    
+
+        dense_matrix[0,0] = 1
+        dense_matrix[20,10] = 3
         # 2. Convert to a sparse representation (CSR format)
         sparse_matrix = sp.csr_array(dense_matrix)
         # 3. Save to a compressed .npz file
@@ -81,9 +92,9 @@ class Level1():
 
             # 4. Load it back instantly
             dense_matrix = sp.load_npz(FILE_LV1)
-            for lin in range(MAP_H):
+            for lin in range(TILE_MAP_LEVEL1[1]):
                 line = []           
-                for col in range(MAP_W):                    
+                for col in range(TILE_MAP_LEVEL1[0]):                    
                     if dense_matrix[lin,col] != 0:
                         self.obj_call(dense_matrix, lin, col, line, tile_map)
                     else: line.append(None)  
@@ -99,7 +110,7 @@ class Level1():
         return True
 
 
-    def obj_call(self, dense_matrix, lin, col, line, tile_map:TileMap2):
+    def obj_call(self, dense_matrix, lin, col, line, tile_map:TileMap):
         for k, call in enumerate(tile_map.codes):
             if dense_matrix[lin,col] == k:
                 id = call[0]

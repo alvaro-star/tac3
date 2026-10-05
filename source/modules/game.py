@@ -3,8 +3,8 @@ import sys
 from .entities.player import Player
 from .ui.background import Background
 #from .display import display
-from .entities.tiles import TileMap2
-from .ui.level1 import Level1
+from .entities.tiles import TileMap
+from .ui.levels import Level1
 from .ui.panel import Panel
 from .config.sounds import sounds
 
@@ -19,7 +19,7 @@ class Game():
         self.panel = Panel()
         
         # load tiles
-        self.tile_map = TileMap2()        
+        self.tile_map = TileMap()        
         self.tile_map.load_sprite_maps()
         self.level1 = Level1()
         if not self.level1.load(self.tile_map):
