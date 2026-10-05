@@ -3,24 +3,43 @@ from ..display import display
 from ..constants import TILE_SIZE, COLOR_BG
 from ..utils import utils
 from ..ui.levels import Level1
+from .notify import Interested, Anchor, Fill
+from ..entities.tiles import Tile
 
-class Grid():
-    def __init__(self):  
+class Grid(Interested):
+    def __init__(self, level:Level1): 
+        super().__init__() 
         self.size = (display.size[0]*0.7, display.size[1]*0.8)
         self.image = pygame.Surface(self.size).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect_orig = self.image.get_rect()
         
         self.anchor = [0,0]
+        self.level = level
+        self.tiles:list[Tile] = []
                 
         self.x_tiles = int(self.size[0]//TILE_SIZE)
         self.y_tiles = int(self.size[1]//TILE_SIZE)
-        
-        self.clear()
-        self.rect.topleft = (display.size[0]*0.1, display.size[1]*0.1)         
+
         
         # Converte e guarda o ID da GPU
         self.texture_id = utils.surface_to_texture(self.image)
+
+        self.clear()
+        self.update_tiles()
+        self.rect.topleft = (display.size[0]*0.1, display.size[1]*0.1)      
+
+        for lin in range(self.y_tiles):                       
+            for col in range(self.x_tiles):     
+                s = pygame.surface.Surface((TILE_SIZE, TILE_SIZE))
+                pos = f"{col},{lin}"      
+                #print(pos)     
+                tile = Tile(0, s, pos)
+                l = col*TILE_SIZE + self.rect.left
+                t = lin*TILE_SIZE + self.rect.top
+                tile.rect.topleft = (l, t)
+                self.tiles.append(tile)   
+                
 
 
     def clear(self):
@@ -33,7 +52,17 @@ class Grid():
 
      
     def update(self, dt):   
-        self.clear()             
+        for event in self.events_get():
+            if event == Anchor:
+                self.clear()             
+                self.update_tiles()
+            if event == Fill:
+                print("FILL")
+                self.clear()             
+                self.update_tiles()
+
+
+    def update_tiles(self):
         for lin in range(self.y_tiles):                       
             for col in range(self.x_tiles):
                 c = self.anchor[0] + col
@@ -46,9 +75,7 @@ class Grid():
                     self.image.blit(tile.image, rect)
         self.texture_id = utils.update_texture(self.texture_id, self.image)
 
-
-    def load_level(self, level:Level1):
-        self.level = level
+   
 
     def draw(self):
         x,y,w,h = self.rect.x, self.rect.y, self.rect.w, self.rect.h        

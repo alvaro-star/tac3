@@ -8,7 +8,7 @@ SCALE = 1   # for pixel art
 WIDTH, HEIGHT = 1920//SCALE, 1080//SCALE   # full HD - precisa usar dirty sprites - vetorial
 
 TITLE = "Game TAC3"
-FPS = 0
+FPS = 60
 
 COLOR_TEXT = pygame.Color("#087204")
 COLOR_BG = pygame.Color("#5C94FC")

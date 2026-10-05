@@ -14,7 +14,7 @@ class Tile():
         self.id = id
         self.image = surf
         self.desc = desc
-        
+
         if w != TILE_CROP or h != TILE_CROP:
             self.image = pygame.transform.smoothscale(self.image, (w,h))
         self.rect = self.image.get_rect()

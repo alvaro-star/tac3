@@ -3,12 +3,14 @@ from ..display import display
 from ..constants import SCALE, TILE_MAP_LEVEL1
 from ..utils import utils
 from .grid import Grid
+from .notify import Interested, Anchor
 
-class Info():
-    def __init__(self, grid:Grid):  
+class Info(Interested):
+    def __init__(self, grid:Grid): 
+        super().__init__() 
         pygame.font.init()              
         self.delay:int = 1
-        self.counter = self.delay    
+        self.counter = self.delay           
         
         # Initialize a font (system default or custom font file)
         #self.font = pygame.font.SysFont("Arial", 14)
@@ -62,18 +64,20 @@ class Info():
             self.texture_id = utils.update_texture(self.texture_id, self.image)    
             self.counter = 0
 
-        # atualizar anchor - condicao de evento
-        #if self.counter >= self.delay: 
-        #print("ddfdfd")
-        grid_text = f"{grid.anchor}"
-        #self.font2 = pygame.font.Font("assets/fonts/Call of Ops Duty II.otf", 100)
-        self.image_anchor_tiles = self.font2.render(grid_text, True, pygame.Color("green")) 
-        self.image_anchor_tiles = pygame.transform.smoothscale_by(self.image_anchor_tiles, 1/(SCALE*4))
-        self.rect_anchor_tiles = self.image_anchor_tiles.get_rect()
-        # Converte e guarda o ID da GPU
-        self.texture_id_anchor_tiles = utils.update_texture(self.texture_id_anchor_tiles, self.image_anchor_tiles)
-            
-
+        for event in self.events_get():
+            if event == Anchor:
+                # atualizar anchor - condicao de evento
+                #if self.counter >= self.delay: 
+                #print("ddfdfd")
+                grid_text = f"{grid.anchor}"
+                #self.font2 = pygame.font.Font("assets/fonts/Call of Ops Duty II.otf", 100)
+                self.image_anchor_tiles = self.font2.render(grid_text, True, pygame.Color("green")) 
+                self.image_anchor_tiles = pygame.transform.smoothscale_by(self.image_anchor_tiles, 1/(SCALE*4))
+                self.rect_anchor_tiles = self.image_anchor_tiles.get_rect()
+                # Converte e guarda o ID da GPU
+                self.texture_id_anchor_tiles = utils.update_texture(self.texture_id_anchor_tiles, self.image_anchor_tiles)
+        
+    
 
     def draw(self):
         x,y,w,h = 0, 0, self.rect.w, self.rect.h        
