@@ -1,5 +1,3 @@
-import pygame
-import sys, os
 from ..display import display
 from .info import Info
 from .grid import Grid
@@ -7,131 +5,85 @@ from ..entities.tiles import TileMap
 from OpenGL.GL import *
 from ..ui.background import Background
 from ..ui.levels import Level1
-from ..constants import TILE_MAP_LEVEL1, TILE_SIZE
-from .notify import Notify, Anchor, Select, Fill
+from .notify import notify
 from .pallet import Pallet
+from .button import Button
+from ..constants import *
 
 class Editor:
-    def run(self):
-            self.running = True 
-            display.create_display()
-            self.bg = Background("Black")
+    def create(self):
+        self.running = True         
 
-            # load tiles
-            self.tile_map = TileMap()        
-            self.tile_map.load_sprite_maps()
-            self.level1 = Level1()
-            if not self.level1.load(self.tile_map):
-                self.level1.load(self.tile_map)
-            
-            self.grid = Grid(self.level1)
-            self.info = Info(self.grid)
-            self.pallet = Pallet(self.tile_map)
+        display.create_display()
+        self.bg = Background(*display.size, "Black")
 
-            #self.notify = Notify([self.grid, self.info])
-            self.notify_anchor = Notify([self.grid, self.info], Anchor)
-            self.notify_select = Notify([self.pallet], Select)
-            self.notify_fill = Notify([self.grid], Fill)
-            
-            
-            
-            """O Game Loop Principal"""
-            #try:           
-            while self.running:
-                dt = display.game_tick()   
-                self.handle_events()
-                self.update(dt)
-                self.draw()
-            '''except Exception as e:
-                print(e)            # log here
-                self.running = False
-                pygame.quit()
-                sys.exit()'''
+        # load tiles
+        self.tile_map = TileMap()        
+        self.tile_map.load_sprite_maps()
+        self.level1 = Level1()
+        if not self.level1.load(self.tile_map):
+            self.level1.load(self.tile_map)
 
+        # assets        
+        self.grid = Grid(self.level1)        
+        self.pallet = Pallet(self.tile_map)   
+        self.info = Info(self.grid, self.pallet)     
+      
+        text, message = "Save", "Map saved!!!"
+        self.button_save = Button(text=text, message=message, icon=ICON_SAVE)
+        self.button_save.rect.topleft = (0, display.size[1]-SIZE_ICON[1])
 
-    def handle_events(self):
-        """Loop de Eventos: Inputs globais do sistema e interrupções"""
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.running = False
-            # mouse
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                x,y = pygame.mouse.get_pos()
-                if self.pallet.rect.collidepoint(x,y):
-                    for tile in self.pallet.tiles:
-                        l = self.pallet.rect.left + tile.rect.left
-                        t = self.pallet.rect.top + tile.rect.top                        
-                        r = pygame.rect.Rect(l,t, tile.rect.w, tile.rect.h)
-                        if r.collidepoint(x,y):
-                            self.pallet.select = tile
-                            self.notify_select.event()  
-                            #print(tile.id)  
-                            break  
-                if self.grid.rect.collidepoint(x,y):
-                    if self.pallet.select:
-                        for tile in self.grid.tiles:
-                            if tile.rect.collidepoint(x,y):
-                                col, lin = tile.desc.split(",")
-                                col = int(col)
-                                lin = int(lin)
-                                print(col, lin)
-                                self.grid.level.tiles[lin][col] = self.pallet.select
-                                left = (col + self.grid.anchor[0]) * TILE_SIZE
-                                top = (lin + self.grid.anchor[1]) * TILE_SIZE
-                                self.grid.level.tiles[lin][col].rect.topleft = (left, top)
-                                self.notify_fill.event()
-                                break
-
-                        
-
-        #game_events()
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            if self.grid.anchor[0] > 0:
-                self.grid.anchor[0] -= 1
-                self.notify_anchor.event()
-        if keys[pygame.K_RIGHT]:
-            max = TILE_MAP_LEVEL1[0] - self.grid.x_tiles
-            if self.grid.anchor[0] < max:
-                self.grid.anchor[0] += 1
-                self.notify_anchor.event()
-        if keys[pygame.K_UP]:
-            if self.grid.anchor[1] > 0:
-                self.grid.anchor[1] -= 1
-                self.notify_anchor.event()
-        if keys[pygame.K_DOWN]:
-            max = TILE_MAP_LEVEL1[1] - self.grid.y_tiles
-            if self.grid.anchor[1] < max:
-                self.grid.anchor[1] += 1
-                self.notify_anchor.event()
+        text, message = "Load", "Map loaded!!!"
+        self.button_load = Button(text=text, message=message, icon=ICON_LOAD)
+        self.button_load.rect.topleft = (self.button_save.rect.w, display.size[1]-SIZE_ICON[1])
+        
         
 
-    def update(self, dt):
-        """Loop de Atualização: Onde a lógica matemática acontece"""
-        # new thread!                
-        # check_collisions()
-        #game.player.update(dt)
-        self.info.update(dt, self.grid)
+        '''self.notify_setup()
+
+
+    def notify_setup(self):              
+        self.notify_anchor = Notify([self.grid, self.info], Anchor)
+        self.notify_select = Notify([self.pallet], Select)
+        self.notify_fill = Notify([self.grid], Fill)
+        self.notify_message = Notify([self.button_save], Message)
+        self.notify_over_save = Notify([self.button_save], Over)
+        self.notify_clicked_save = Notify([self.button_save], Clicked)
+        
+        self.notify_over_left = Notify([self.button_left], Over)
+        self.notify_over_up = Notify([self.button_up], Over)
+        self.notify_over_down = Notify([self.button_down], Over)
+        self.notify_over_right = Notify([self.button_right], Over)
+
+        self.notify_clicked_left = Notify([self.button_left], Clicked)
+        self.notify_clicked_up = Notify([self.button_up], Clicked)
+        self.notify_clicked_down = Notify([self.button_down], Clicked)
+        self.notify_clicked_right = Notify([self.button_right], Clicked)
+
+        self.notify_anchor_vertical = Notify([self.grid_vertical_bar], AnchorV)
+        self.notify_anchor_horizontal = Notify([self.grid_horizontal_bar], AnchorH)'''
+
+
+    def update(self, dt:float):
+        self.info.update(dt)
         self.grid.update(dt)
         self.pallet.update(dt)
+        self.button_save.update(dt) 
+        self.button_load.update(dt)  
+        
+        notify.clear()
 
-            
+
     def draw(self):
-        """Loop de Renderização: Onde desenhamos na tela"""                 
-        # Render Phase
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        # ordem importa - cada layer por vez - pode organizar
         self.bg.draw()
         self.info.draw()
         self.grid.draw()
         self.pallet.draw()
+        self.button_save.draw()
+        self.button_load.draw()
         
-        pygame.display.flip()
-        # forçar sincronização de hardware CPU e GPU - chamadas assincronas
-        #glFinish()
+        
 
 
 editor = Editor()
+

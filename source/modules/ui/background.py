@@ -1,11 +1,11 @@
 import pygame
-from ..constants import WIDTH, HEIGHT, COLOR_BG
+from ..constants import COLOR_BG
 from ..utils import utils
 from ..entities.tiles import Tile
 
 class Background():
-    def __init__(self, color=COLOR_BG):
-        self.image = pygame.Surface((WIDTH, HEIGHT))
+    def __init__(self, w:int, h:int, color=COLOR_BG):
+        self.image = pygame.Surface((w, h))
         self.image.fill(color) 
         
         self.rect = self.image.get_rect()

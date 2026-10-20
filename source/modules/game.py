@@ -2,7 +2,7 @@ import pygame
 import sys
 from .entities.player import Player
 from .ui.background import Background
-#from .display import display
+from .display import display
 from .entities.tiles import TileMap
 from .ui.levels import Level1
 from .ui.panel import Panel
@@ -14,8 +14,8 @@ class Game():
         self.running = False
 
     def init_assets(self): 
-        self.bg = Background()
-        self.player = Player()
+        self.bg = Background(*display.size)        
+        self.player = Player(display.size[0]*0.2, display.size[1]*0.6)
         self.panel = Panel()
         
         # load tiles

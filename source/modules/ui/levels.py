@@ -56,10 +56,9 @@ class Level1(Level):
         # 1. Create a matrix with mostly zeros
         # (Using sparse array syntax - standard in SciPy)
         dense_matrix = np.zeros((TILE_MAP_LEVEL1[1], TILE_MAP_LEVEL1[0]), dtype=int)
-        
-                
+                        
         # add tiles - floor          
-        for lin in range(TILE_MAP_LEVEL1[1]):
+        '''for lin in range(TILE_MAP_LEVEL1[1]):
             for col in range(TILE_MAP_LEVEL1[0]):               
                 # some few bricks and floor
                 block_cond_1 = int(TILE_MAP_LEVEL1[0]*0.5) <= col <= int(TILE_MAP_LEVEL1[0]*0.6)
@@ -71,26 +70,47 @@ class Level1(Level):
                     dense_matrix[lin,col] = 3 
 
         dense_matrix[0,0] = 1
-        dense_matrix[20,10] = 3
+        dense_matrix[20,10] = 3'''
+
         # 2. Convert to a sparse representation (CSR format)
         sparse_matrix = sp.csr_array(dense_matrix)
         # 3. Save to a compressed .npz file
-        sp.save_npz(FILE_LV1, sparse_matrix)
+        sp.save_npz(FILE_LV1, sparse_matrix, compressed=False)
         #np.savetxt('matrix.csv', dense_matrix, delimiter=',')
+
+
+    def load_level(self):
+        pass
+        # save and load precisa ser refatorado! menu para escolha de arquivo de nivel   
+        # salvar arquivo de configuração para guardar posicao de nivel e ancora
+        # info tbm adaptar
+        # novo botao de create level
+        
+
+    def save_level(self):
+        dense_matrix = np.zeros((TILE_MAP_LEVEL1[1], TILE_MAP_LEVEL1[0]), dtype=int)
+        for lin in range(TILE_MAP_LEVEL1[1]):                     
+            for col in range(TILE_MAP_LEVEL1[0]):
+                if self.tiles[lin][col]:
+                    dense_matrix[lin,col] = self.tiles[lin][col].id
+                else:
+                    dense_matrix[lin,col] = 0
+        sparse_matrix = sp.csr_array(dense_matrix)
+        sp.save_npz(FILE_LV1, sparse_matrix, compressed=False)
+
 
 
     def load(self, tile_map):        
         # debug
-        self.create_first_map()
-
-        #self.tiles:list[list[pygame.sprite.DirtySprite]] = []
+        #self.create_first_map()
+                
         self.tiles:list[list[Tile]] = []
         try:
             resource = utils.get_full_path(FILE_LV1_JSON)            
             with open(resource, 'r', encoding='utf-8') as file:
                 self.data = json.load(file)
 
-            # 4. Load it back instantly
+            # Load it back instantly
             dense_matrix = sp.load_npz(FILE_LV1)
             for lin in range(TILE_MAP_LEVEL1[1]):
                 line = []           

@@ -1,14 +1,15 @@
 import pygame
-from ..constants import WIDTH, HEIGHT, GRAVITY, SIZE_PLAYER
-from ..constants import MAP_H, FILE_PLAYER_1, TILE_SIZE, SCALE, FILE_SPRITES_PLAYER
+from ..constants import GRAVITY, SIZE_PLAYER
+from ..constants import TILE_SIZE
 from ..utils import utils
 from ..config.sounds import sounds
-import random
+from ..display import display
+#import random
 
 
 class Player():
     """Classe que gerencia o personagem, suas físicas básicas e inputs."""
-    def __init__(self, x=WIDTH*0.2, y=HEIGHT*0.6):
+    def __init__(self, x, y):
         self.frame_index = 0
         self.frame_speed = 16
         self.current_frame = 0.0
@@ -71,7 +72,7 @@ class Player():
         self.is_grounded = False
 
         #self.jump_min = (int(MAP_H*0.75)*TILE_SIZE) + TILE_SIZE
-        self.jump_max = (int(MAP_H*0.90)*TILE_SIZE) + TILE_SIZE # chao
+        self.jump_max = (display.size[1]*TILE_SIZE) + TILE_SIZE # chao
         #print(self.jump_min, self.jump_max)
         self.jump_min = self.jump_max + (0.08* self.jump_speed)
         #print(self.jump_min)
@@ -122,7 +123,7 @@ class Player():
         self.apply_gravity(dt)
         
         # Simulação temporária de colisão com o "chão" da tela        
-        floor = (int(MAP_H*0.9)*TILE_SIZE) + TILE_SIZE        
+        floor = (display.size[1]*TILE_SIZE) + TILE_SIZE        
         if self.rect.bottom >= floor:
             self.rect.bottom = floor
             self.direction.y = 0

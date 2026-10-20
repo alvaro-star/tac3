@@ -11,14 +11,16 @@ class GameEngine:
     def __init__(self):
         #pygame.init() # load all modules       
         #pygame.joystick.init()        
-        
+        pass
+             
+
+    def run(self):
         display.create_display()   
         sounds.load_assets()
         game.init_assets()
         #menu.create()        
-        #options.create()        
+        #options.create()  
 
-    def run(self):
         # main menu - editor or game         
         game.start()
         """O Game Loop Principal"""

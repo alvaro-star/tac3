@@ -1,6 +1,6 @@
 import pygame
 from ..display import display
-from ..constants import SCALE
+#from ..constants import SCALE
 from ..utils import utils
 
 class Panel():
@@ -33,7 +33,7 @@ class Panel():
             fps_text = f"FPS:{valor}"
             # Render the text (Text, Anti-aliasing, Color)
             self.image = self.font.render(fps_text, True, pygame.Color("green"))
-            self.image = pygame.transform.smoothscale_by(self.image, 1/(SCALE*4)) 
+            self.image = pygame.transform.smoothscale_by(self.image, 1/4) 
             self.rect = self.image.get_rect()    
             self.texture_id = utils.surface_to_texture(self.image)    
             self.counter = 0
