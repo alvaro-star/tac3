@@ -1,3 +1,7 @@
+import os
+
+os.environ.setdefault("SDL_VIDEODRIVER", "x11")
+
 from source.modules.engine import engine
 from source.modules.maker.editor import editor
 

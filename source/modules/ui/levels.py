@@ -80,13 +80,13 @@ class Level1(Level):
 
 
     def load(self, tile_map):        
-        # debug
-        self.create_first_map()
+        # debug - recria o mapa do zero (apaga o que foi salvo no editor)
+        #self.create_first_map()
 
         #self.tiles:list[list[pygame.sprite.DirtySprite]] = []
         self.tiles:list[list[Tile]] = []
         try:
-            resource = utils.get_full_path(FILE_LV1_JSON)            
+            resource = utils.get_full_path(FILE_LV1_JSON)
             with open(resource, 'r', encoding='utf-8') as file:
                 self.data = json.load(file)
 
@@ -97,8 +97,8 @@ class Level1(Level):
                 for col in range(TILE_MAP_LEVEL1[0]):                    
                     if dense_matrix[lin,col] != 0:
                         self.obj_call(dense_matrix, lin, col, line, tile_map)
-                    else: line.append(None)  
-                self.tiles.append(line)  
+                    else: line.append(None)
+                self.tiles.append(line)
 
         except FileNotFoundError:
             print(f"Error: The file '{resource}' was not found.")
@@ -108,6 +108,16 @@ class Level1(Level):
         except json.JSONDecodeError:
             print("Error: The file is not a valid JSON format.")
         return True
+
+
+    def save(self):
+        # grava o id de cada tile na matriz esparsa (0 = vazio)
+        dense_matrix = np.zeros((TILE_MAP_LEVEL1[1], TILE_MAP_LEVEL1[0]), dtype=int)
+        for lin, line in enumerate(self.tiles):
+            for col, tile in enumerate(line):
+                if tile: dense_matrix[lin,col] = tile.id
+        sp.save_npz(utils.get_full_path(FILE_LV1), sp.csr_array(dense_matrix))
+        print(f"Mapa salvo em {FILE_LV1}")
 
 
     def obj_call(self, dense_matrix, lin, col, line, tile_map:TileMap):

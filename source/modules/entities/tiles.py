@@ -36,6 +36,9 @@ class TileMap():
         self.floor2 = self.map_items.subsurface((768,448,TILE_CROP,TILE_CROP))
         self.brick1 = self.map_items.subsurface((320,144,TILE_CROP,TILE_CROP))
         self.brick2 = self.map_items.subsurface((832,400,TILE_CROP,TILE_CROP))
+        self.brick3 = self.map_items.subsurface((1010,400,TILE_CROP,TILE_CROP))
+        self.brick4 = self.map_items.subsurface((2065,80,TILE_CROP,TILE_CROP))
+        self.brick5 = self.map_items.subsurface((2192,160,TILE_CROP,TILE_CROP))
 
         #pygame.image.save(self.floor1,"1.png")
       
@@ -45,7 +48,10 @@ class TileMap():
             (1, self.floor1, "floor1"),     # id, surface, description
             (2, self.floor2, "floor2"),
             (3, self.brick1, "brick1"),
-            (4, self.brick2, "brick2")
+            (4, self.brick2, "brick2"),
+            (5, self.brick3, "brick3"),
+            (6, self.brick4, "brick4"),
+            (7, self.brick5, "brick5")
         ]
 
 #tile_map = TileMap()

@@ -53,29 +53,36 @@ class Grid(Interested):
      
     def update(self, dt):   
         for event in self.events_get():
+            print(event)
             if event == Anchor:
+                print("ANCHOR")
                 self.clear()             
                 self.update_tiles()
             if event == Fill:
                 print("FILL")
                 self.clear()             
-                self.update_tiles()
+                self.update_tiles(True)
 
 
-    def update_tiles(self):
+    def update_tiles(self, showLogs = False):
+        if showLogs:
+            print("Adicao de um tile na tela")
+            print("Densidades de TILES",self.y_tiles, self.x_tiles)
         for lin in range(self.y_tiles):                       
             for col in range(self.x_tiles):
                 c = self.anchor[0] + col
-                l = self.anchor[1] + lin                
+                l = self.anchor[1] + lin
+
                 tile = self.level.tiles[l][c]
-                if tile:                    
+
+                if tile:       
+                    if showLogs:
+                        print(self.anchor)
                     l = tile.rect.left - (self.anchor[0]*TILE_SIZE)
                     t = tile.rect.top - (self.anchor[1]*TILE_SIZE)
-                    rect = (l, t, tile.rect.w, tile.rect.h)                    
+                    rect = (l, t, tile.rect.w, tile.rect.h)
                     self.image.blit(tile.image, rect)
         self.texture_id = utils.update_texture(self.texture_id, self.image)
-
-   
 
     def draw(self):
         x,y,w,h = self.rect.x, self.rect.y, self.rect.w, self.rect.h        
